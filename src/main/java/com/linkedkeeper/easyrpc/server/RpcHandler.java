@@ -11,6 +11,7 @@ import net.sf.cglib.reflect.FastMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
@@ -55,14 +56,14 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
         Object[] parameters = request.getParameters();
 
         // JDK reflect
-        /*Method method = serviceClass.getMethod(methodName, parameterTypes);
+        Method method = serviceClass.getMethod(methodName, parameterTypes);
         method.setAccessible(true);
-        return method.invoke(serviceBean, parameters);*/
+        return method.invoke(serviceBean, parameters);
 
         // Cglib reflect
-        FastClass serviceFastClass = FastClass.create(serviceClass);
-        FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
-        return serviceFastMethod.invoke(serviceBean, parameters);
+        /**FastClass serviceFastClass = FastClass.create(serviceClass);
+         FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
+         return serviceFastMethod.invoke(serviceBean, parameters);**/
     }
 
     public void exceptiionCaught(ChannelHandlerContext ctx, Throwable cause) {

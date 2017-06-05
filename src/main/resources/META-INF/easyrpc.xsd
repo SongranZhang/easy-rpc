@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.linkedkeeper.com/schema/easyrpc" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.linkedkeeper.com/schema/easyrpc">
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[ Namespace support for the EasyRpc Service Framework ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <!-- com.linkedkeeper.easyrpc.config.spring.ServerBean -->
+    <xsd:element name="server">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ 服务端配置（监听端口），可作为一级元素 ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ Spring的BeanId ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="protocol" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 服务端协议 ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="port" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 服务端绑定端口（已绑定自动+1重试） ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- com.linkedkeeper.easyrpc.config.AbstractInterfaceConfig -->
+    <xsd:complexType name="interfaceShared">
+        <xsd:attribute name="proxy" type="xsd:string" use="optional">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ 代理类生成方式 ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <!-- com.linkedkeeper.easyrpc.config.spring.ProviderBean -->
+    <xsd:element name="provider">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ 服务提供者配置，可作为一级元素 ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="interfaceShared">
+                    <xsd:attribute name="id" type="xsd:ID" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ Spring的BeanId ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="interface" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 接口名称 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="alias" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 服务别名分组信息 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="ref" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 接口实现类  ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="server" type="xsd:string" use="optional">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 需要发布服务到的Server，多个用英文逗号隔开 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="timeout" type="xsd:string" use="optional">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 服务端执行超时时间，超过时间打印警告日志 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- com.linkedkeeper.easyrpc.config.AbstractConsumerConfig -->
+    <xsd:complexType name="consumerShared" abstract="true">
+        <xsd:complexContent>
+            <xsd:extension base="interfaceShared">
+                <xsd:attribute name="protocol" type="xsd:string" use="optional">
+                    <xsd:annotation>
+                        <xsd:documentation><![CDATA[ 调用的协议 ]]></xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="url" type="xsd:string" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation><![CDATA[ 直连地址 ]]></xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- com.linkedkeeper.easyrpc.config.spring.ConsumerBean -->
+    <xsd:element name="consumer">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ 服务调用者配置，可作为一级二级元素 ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="consumerShared">
+                    <xsd:attribute name="id" type="xsd:ID" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ Spring的BeanId ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="interfaceClass" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 接口名称 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="alias" type="xsd:string" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation><![CDATA[ 服务别名分组信息 ]]></xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

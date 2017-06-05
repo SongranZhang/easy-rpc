@@ -25,30 +25,20 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class RpcServer implements ApplicationContextAware, InitializingBean, DisposableBean {
+public class RpcServer implements InitializingBean, DisposableBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcServer.class);
 
     private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(16, 16, 600L, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(65536));
 
     private String serverAddress;
-    private Map<String, Object> handleMap = new HashMap();
+    public static Map<String, Object> handleMap = new HashMap();
 
     EventLoopGroup bossGroup = new NioEventLoopGroup();
     EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     public RpcServer(String serverAddress) {
         this.serverAddress = serverAddress;
-    }
-
-    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class);
-        if (MapUtils.isNotEmpty(serviceBeanMap)) {
-            for (Object serviceBean : serviceBeanMap.values()) {
-                String interfaceName = serviceBean.getClass().getAnnotation(RpcService.class).value().getName();
-                handleMap.put(interfaceName, serviceBean);
-            }
-        }
     }
 
     public void afterPropertiesSet() throws Exception {
