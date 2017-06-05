@@ -26,7 +26,7 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
     protected void channelRead0(final ChannelHandlerContext ctx, final RpcRequest request) throws Exception {
         RpcServer.submit(new Runnable() {
             public void run() {
-                LOGGER.info("Receive request " + request.getRequestId());
+                LOGGER.debug("Receive request " + request.getRequestId());
                 RpcResponse response = new RpcResponse();
                 response.setRequestId(request.getRequestId());
                 try {
@@ -53,15 +53,6 @@ public class RpcHandler extends SimpleChannelInboundHandler<RpcRequest> {
         String methodName = request.getMethodName();
         Class<?>[] parameterTypes = request.getParameterTypes();
         Object[] parameters = request.getParameters();
-
-        LOGGER.debug(serviceClass.getName());
-        LOGGER.debug(methodName);
-        for (int i = 0; i < parameterTypes.length; ++i) {
-            LOGGER.debug(parameterTypes[i].getName());
-        }
-        for (int i = 0; i < parameters.length; ++i) {
-            LOGGER.debug(parameters[i].toString());
-        }
 
         // JDK reflect
         /*Method method = serviceClass.getMethod(methodName, parameterTypes);
