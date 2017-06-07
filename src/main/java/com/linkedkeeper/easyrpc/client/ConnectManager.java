@@ -123,7 +123,7 @@ public class ConnectManager {
                         LOGGER.warn("Attempting to reconnect.");
                         connect(b, remotePeer);
                     }
-                }, 1, TimeUnit.SECONDS);
+                }, 10, TimeUnit.SECONDS);
             }
         });
         connectFuture.addListener(new ChannelFutureListener() {
