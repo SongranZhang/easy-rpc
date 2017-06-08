@@ -4,20 +4,20 @@ import com.linkedkeeper.easyrpc.client.ConnectManager;
 import com.linkedkeeper.easyrpc.client.RpcClientHandler;
 import com.linkedkeeper.easyrpc.client.RpcFuture;
 import com.linkedkeeper.easyrpc.codec.RpcRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class ObjectProxy<T> implements InvocationHandler, IAsyncObjectProxy {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectProxy.class);
     private Class<T> clazz;
+    private long timeout;
 
-    public ObjectProxy(Class<T> clazz) {
+    public ObjectProxy(Class<T> clazz, long timeout) {
         this.clazz = clazz;
+        this.timeout = timeout;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -45,7 +45,7 @@ public class ObjectProxy<T> implements InvocationHandler, IAsyncObjectProxy {
 
         RpcClientHandler handler = ConnectManager.getInstance().chooseHandler();
         RpcFuture rpcFuture = handler.sendRequest(request);
-        return rpcFuture.get();
+        return rpcFuture.get(timeout, TimeUnit.SECONDS);
     }
 
     public RpcFuture call(String funcName, Object... args) {

@@ -12,9 +12,11 @@ public class RpcClient {
     private final Map<Class, Object> proxyInstances = new ConcurrentHashMap();
 
     private String serverAddress;
+    private long timeout;
 
-    public RpcClient(String serverAddress) {
+    public RpcClient(String serverAddress, long timeout) {
         this.serverAddress = serverAddress;
+        this.timeout = timeout;
         connect();
     }
 
@@ -29,7 +31,7 @@ public class RpcClient {
             Object proxy = Proxy.newProxyInstance(
                     interfaceClass.getClassLoader(),
                     new Class<?>[]{interfaceClass},
-                    new ObjectProxy(interfaceClass)
+                    new ObjectProxy(interfaceClass, timeout)
             );
             proxyInstances.put(interfaceClass, proxy);
             return (T) proxy;
@@ -37,7 +39,7 @@ public class RpcClient {
     }
 
     public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass) {
-        return new ObjectProxy(interfaceClass);
+        return new ObjectProxy(interfaceClass, timeout);
     }
 
     public void stop() {
