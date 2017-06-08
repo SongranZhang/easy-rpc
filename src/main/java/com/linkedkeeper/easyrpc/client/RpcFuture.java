@@ -7,16 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RpcFuture implements Future<Object> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcFuture.class);
+
+    private ThreadPoolExecutor executor = new ThreadPoolExecutor(16, 16, 600L, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(65536));
 
     private Sync sync;
     private RpcRequest request;
@@ -109,7 +108,7 @@ public class RpcFuture implements Future<Object> {
 
     public void runCallback(final AsyncRPCCallback callback) {
         final RpcResponse response = this.response;
-        RpcClient.submit(new Runnable() {
+        executor.submit(new Runnable() {
             public void run() {
                 if (!response.isError()) {
                     callback.success(response.getResult());
@@ -120,9 +119,9 @@ public class RpcFuture implements Future<Object> {
         });
     }
 
-    static class Sync extends AbstractQueuedSynchronizer {
+    class Sync extends AbstractQueuedSynchronizer {
 
-        private static final long serialVersionUID = 1L;
+        private final long serialVersionUID = 1L;
 
         // future status
         private final int done = 1;
