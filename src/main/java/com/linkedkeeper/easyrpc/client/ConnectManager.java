@@ -80,16 +80,19 @@ public class ConnectManager {
             }
         } else { // No available server node ( All server nodes are down )
             LOGGER.error("No available server node. All server nodes are down !!!");
-            for (final RpcClientHandler connectedServerHandler : connectedHandlers) {
-                SocketAddress remotePeer = connectedServerHandler.getRemotePeer();
-                RpcClientHandler handler = connectedServerNodes.get(remotePeer);
-                handler.close();
-                connectedServerNodes.remove(connectedServerHandler);
-            }
-            connectedHandlers.clear();
+            clearConnectedServer();
         }
     }
 
+    public void clearConnectedServer() {
+        for (final RpcClientHandler connectedServerHandler : connectedHandlers) {
+            SocketAddress remotePeer = connectedServerHandler.getRemotePeer();
+            RpcClientHandler handler = connectedServerNodes.get(remotePeer);
+            handler.close();
+            connectedServerNodes.remove(connectedServerHandler);
+        }
+        connectedHandlers.clear();
+    }
 
     public void reconnect(final RpcClientHandler handler, final SocketAddress remotePeer) {
         if (handler != null) {
@@ -120,9 +123,10 @@ public class ConnectManager {
                 future.channel().eventLoop().schedule(new Runnable() {
                     public void run() {
                         LOGGER.warn("Attempting to reconnect.");
+                        clearConnectedServer();
                         connect(b, remotePeer);
                     }
-                }, 10, TimeUnit.SECONDS);
+                }, 3, TimeUnit.SECONDS);
             }
         });
         connectFuture.addListener(new ChannelFutureListener() {
