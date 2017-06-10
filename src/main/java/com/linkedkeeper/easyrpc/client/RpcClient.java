@@ -19,7 +19,7 @@ public class RpcClient {
         this.serverAddress = serverAddress;
         this.timeout = timeout;
         this.debug = debug;
-        if (!debug) {
+        if (!this.debug) {
             connect();
         }
     }
@@ -29,7 +29,7 @@ public class RpcClient {
     }
 
     public <T> T create(Class<T> interfaceClass) {
-        if (!debug) {
+        if (debug) {
             return null;
         }
         if (proxyInstances.containsKey(interfaceClass)) {
