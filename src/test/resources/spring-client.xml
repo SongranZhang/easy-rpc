@@ -12,6 +12,7 @@
     <bean id="rpcClient" class="com.linkedkeeper.easyrpc.client.RpcClient">
         <constructor-arg name="serverAddress" value="${server.address}"/>
         <constructor-arg name="timeout" value="3"/>
+        <constructor-arg name="debug" value="false"/>
     </bean>
 
 </beans>
