@@ -13,15 +13,11 @@ public class RpcClient {
 
     private String serverAddress;
     private long timeout;
-    private boolean debug;
 
-    public RpcClient(String serverAddress, long timeout, boolean debug) {
+    public RpcClient(String serverAddress, long timeout) {
         this.serverAddress = serverAddress;
         this.timeout = timeout;
-        this.debug = debug;
-        if (!this.debug) {
-            connect();
-        }
+        connect();
     }
 
     private void connect() {
@@ -29,9 +25,6 @@ public class RpcClient {
     }
 
     public <T> T create(Class<T> interfaceClass) {
-        if (debug) {
-            return null;
-        }
         if (proxyInstances.containsKey(interfaceClass)) {
             return (T) proxyInstances.get(interfaceClass);
         } else {
