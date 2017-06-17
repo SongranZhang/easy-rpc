@@ -12,11 +12,6 @@
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 
-    <!--<bean id="rpcClient" class="com.linkedkeeper.easyrpc.client.RpcClient">-->
-    <!--<constructor-arg name="serverAddress" value="${server.address}"/>-->
-    <!--<constructor-arg name="timeout" value="3"/>-->
-    <!--</bean>-->
-
     <easyrpc:consumer id="rpcClient" url="${server.address}"
                       interface="com.linkedkeeper.easyrpc.client.RpcClient"
                       alias="1.0" timeout="3"/>

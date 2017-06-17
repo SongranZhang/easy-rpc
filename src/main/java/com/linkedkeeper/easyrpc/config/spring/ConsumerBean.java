@@ -15,7 +15,7 @@ public class ConsumerBean extends ConsumerFactoryBean implements InitializingBea
     /**
      * slf4j logger for this class
      */
-    private Logger logger = LoggerFactory.getLogger(ProviderBean.class);
+    private Logger logger = LoggerFactory.getLogger(ConsumerBean.class);
 
     protected transient ApplicationContext applicationContext = null;
     private transient String beanName = null;

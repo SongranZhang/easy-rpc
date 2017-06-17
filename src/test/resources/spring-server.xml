@@ -19,8 +19,6 @@
     <easyrpc:provider id="HelloProvider" interface="com.linkedkeeper.easyrpc.test.client.HelloService"
                       alias="1.0" ref="helloService"/>
 
-    <bean id="rpcServer" class="com.linkedkeeper.easyrpc.server.RpcServer">
-        <constructor-arg name="serverAddress" value="${server.address}"/>
-    </bean>
+    <easyrpc:server id="rpcServer" protocol="easyrpc" port="18868"/>
 
 </beans>

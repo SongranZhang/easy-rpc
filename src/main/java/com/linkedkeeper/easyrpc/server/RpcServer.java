@@ -4,6 +4,7 @@ import com.linkedkeeper.easyrpc.codec.RpcDecoder;
 import com.linkedkeeper.easyrpc.codec.RpcEncoder;
 import com.linkedkeeper.easyrpc.codec.RpcRequest;
 import com.linkedkeeper.easyrpc.codec.RpcResponse;
+import com.linkedkeeper.easyrpc.config.api.ProviderConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,21 +20,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class RpcServer implements InitializingBean, DisposableBean {
+public class RpcServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcServer.class);
 
     private String serverAddress;
-    public static volatile Map<String, Object> handleMap = new HashMap();
+    public volatile Map<String, Object> handleMap = new HashMap();
 
     EventLoopGroup bossGroup = new NioEventLoopGroup();
     EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    public RpcServer(String serverAddress) {
+    public RpcServer(String serverAddress) throws Exception {
         this.serverAddress = serverAddress;
+        this.startServer();
     }
 
-    public void afterPropertiesSet() throws Exception {
+    public void registerProcessor(ProviderConfig providerConfig) {
+        handleMap.put(providerConfig.getInterface(), providerConfig.getRef());
+    }
+
+    private void startServer() throws Exception {
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)

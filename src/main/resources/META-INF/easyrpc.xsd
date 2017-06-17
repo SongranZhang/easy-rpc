@@ -25,7 +25,7 @@
             </xsd:attribute>
             <xsd:attribute name="port" type="xsd:string" use="optional">
                 <xsd:annotation>
-                    <xsd:documentation><![CDATA[ 服务端绑定端口（已绑定自动+1重试） ]]></xsd:documentation>
+                    <xsd:documentation><![CDATA[ 服务端绑定端口（已绑定自动+1重试）]]></xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
         </xsd:complexType>
