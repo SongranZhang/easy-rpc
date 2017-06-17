@@ -54,3 +54,71 @@ spring-server.xml 配置文件
  
 </beans>
 ```
+
+## 客户端调用服务
+Junit Test
+```java 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath:spring-client.xml")
+public class HelloServiceTest {
+
+    @Autowired
+    private RpcClient rpcClient = null;
+
+    @Test
+    public void helloTest1() {
+        HelloService helloService = rpcClient.create(HelloService.class);
+        String result = helloService.hello("World");
+        System.out.println(result);
+        Assert.assertEquals("Hello! World", result);
+    }
+
+    @Test
+    public void helloTest2() {
+        HelloService helloService = rpcClient.create(HelloService.class);
+        Person person = new Person("Yong", "Huang");
+        String result = helloService.hello(person);
+        System.out.println(result.toString());
+        Assert.assertEquals("Hello! Yong Huang", result);
+    }
+
+    @Test
+    public void helloFutureTest1() throws ExecutionException, InterruptedException {
+        IAsyncObjectProxy helloService = rpcClient.createAsync(HelloService.class);
+        RpcFuture result = helloService.call("hello", "World");
+        Assert.assertEquals("Hello! World", result.get());
+    }
+
+    @Test
+    public void helloFutureTest2() throws ExecutionException, InterruptedException {
+        IAsyncObjectProxy helloService = rpcClient.createAsync(HelloService.class);
+        Person person = new Person("Yong", "Huang");
+        RpcFuture result = helloService.call("hello", person);
+        Assert.assertEquals("Hello! Yong Huang", result.get());
+    }
+
+    @After
+    public void setTear() {
+        if (rpcClient != null) {
+            rpcClient.stop();
+        }
+    }
+}
+```
+spring-client.xml 配置文件
+```xml 
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:easyrpc="http://www.linkedkeeper.com/schema/easyrpc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.linkedkeeper.com/schema/easyrpc
+            http://www.linkedkeeper.com/schema/easyrpc/easyrpc.xsd">
+
+    <easyrpc:consumer id="rpcClient" url="127.0.0.1:18868"
+                      interface="com.linkedkeeper.easyrpc.client.RpcClient"
+                      alias="1.0" timeout="3"/>
+
+</beans>
+```
