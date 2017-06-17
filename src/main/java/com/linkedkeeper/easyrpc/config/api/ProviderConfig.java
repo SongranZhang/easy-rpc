@@ -22,4 +22,5 @@ public class ProviderConfig extends AbstractInterfaceConfig {
     public void setRef(Object ref) {
         this.ref = ref;
     }
+
 }

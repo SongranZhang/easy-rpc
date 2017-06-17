@@ -14,7 +14,7 @@ public class RpcClient {
     private String serverAddress;
     private long timeout;
 
-    public RpcClient(String serverAddress, long timeout) {
+    public void initClient(String serverAddress, long timeout) {
         this.serverAddress = serverAddress;
         this.timeout = timeout;
         connect();

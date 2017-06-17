@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class HelloServiceTest {
 
     @Autowired
-    private RpcClient rpcClient;
+    private RpcClient rpcClient = null;
 
     @Test
     public void helloTest1() {

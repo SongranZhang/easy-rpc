@@ -13,6 +13,11 @@ public abstract class AbstractInterfaceConfig extends AbstractIdConfig {
     protected String alias = "";
 
     /**
+     * 代理接口类，和T对应，主要针对泛化调用
+     */
+    protected volatile transient Class<?> proxyClass = null;
+
+    /**
      * Gets interface.
      *
      * @return the interface
@@ -48,4 +53,5 @@ public abstract class AbstractInterfaceConfig extends AbstractIdConfig {
         checkNormalWithColon("alias", alias);
         this.alias = alias;
     }
+
 }
